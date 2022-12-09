@@ -5,16 +5,18 @@ let inputEl = document.getElementById("searchbar");
 let errorEl = document.querySelector(".error");
 let continentsEl = document.getElementById("continents");
 
+
 function fillBoard() {
     fetch("https://restcountries.com/v3.1/all")
         .then(res => res.json())
         .then(data => {
             console.log(data);
-            data.forEach(element => {
+            containerEl.innerHTML ="";
+            data.forEach(element => {             
                 errorEl.innerHTML = "";
-                containerEl.innerHTML += `<div class="card">
+                containerEl.innerHTML += `<div class="card" onclick="getDetails()">
                <div class="flag"><img src="${element.flags.svg}" alt=""></div>
-               <div class="info"><h1>${element.name.common}</h1>
+               <div class="info"><h1 id="nameid">${element.name.common}</h1>
                <h3>Population: ${element.population}</h3>
                <h3>Region: ${element.region}</h3>
                <h3>Capital: ${element.capital}</h3></div>
@@ -22,7 +24,6 @@ function fillBoard() {
             });
         })
 }
-
 
 fillBoard();
 
@@ -34,15 +35,16 @@ function selectContinent(continent) {
             containerEl.innerHTML = "";
             console.log(data);
             data.forEach(element => {
-                containerEl.innerHTML += `<div class="card">
+                containerEl.innerHTML += `<div class="card" onclick="getDetails()">
            <div class="flag"><img src="${element.flags.svg}" alt=""></div>
-           <div class="info"><h1>${element.name.common}</h1>
+           <div class="info"><h1 id="nameid">${element.name.common}</h1>
            <h3>Population: ${element.population}</h3>
            <h3>Region: ${element.region}</h3>
            <h3>Capital: ${element.capital}</h3></div>
-       </div>`
+       </div>`;
+       
             })
-
+            
         })
 }
 
@@ -54,22 +56,21 @@ function searchCountry(country) {
             containerEl.innerHTML = "";
             console.log(data);
             data.forEach(element => {
-                containerEl.innerHTML += `<div class="card">
+                containerEl.innerHTML += `<div class="card" onclick="getDetails()">
            <div class="flag"><img src="${element.flags.svg}" alt=""></div>
-           <div class="info"><h1>${element.name.common}</h1>
+           <div class="info"><h1 id="nameid">${element.name.common}</h1>
            <h3>Population: ${element.population}</h3>
            <h3>Region: ${element.region}</h3>
            <h3>Capital: ${element.capital}</h3></div>
        </div>`
             })
-
         })
         .catch(err => {
             errorEl.innerHTML = `This country not found`
         })
 }
 
-inputEl.addEventListener("input", function () {
+inputEl.addEventListener("input", function (){
     if (inputEl.value == "") {
         fillBoard()
     } else {
@@ -77,10 +78,18 @@ inputEl.addEventListener("input", function () {
     }
 })
 
-continentsEl.addEventListener("change", function () {
-    if (containerEl.value == "all") {
+continentsEl.addEventListener("input", function () {
+    console.log(continentsEl.value)
+    if (continentsEl.value === "all") {
         fillBoard()
     } else {
         selectContinent(continentsEl.value);
     }
 })
+
+function getDetails(){
+    let nameidEl=document.querySelector(".nameid");
+    localStorage.setItem("name", nameidEl.innerHTML)
+
+};
+
