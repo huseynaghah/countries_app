@@ -11,17 +11,18 @@ function fillBoard() {
         .then(res => res.json())
         .then(data => {
             console.log(data);
-            containerEl.innerHTML ="";
-            data.forEach(element => {             
+            containerEl.innerHTML = "";
+            data.forEach((element) => {
                 errorEl.innerHTML = "";
-                containerEl.innerHTML += `<div class="card" onclick="getDetails()">
+                containerEl.innerHTML += `<div class="card" data-name=${element.name.common}>
                <div class="flag"><img src="${element.flags.svg}" alt=""></div>
-               <div class="info"><h1 id="nameid">${element.name.common}</h1>
+               <div class="info"><h1 class="nameid">${element.name.common}</h1>
                <h3>Population: ${element.population}</h3>
                <h3>Region: ${element.region}</h3>
                <h3>Capital: ${element.capital}</h3></div>
            </div>`
             });
+            getDetails();
         })
 }
 
@@ -35,17 +36,18 @@ function selectContinent(continent) {
             containerEl.innerHTML = "";
             console.log(data);
             data.forEach(element => {
-                containerEl.innerHTML += `<div class="card" onclick="getDetails()">
+                containerEl.innerHTML += `<div class="card" data-name="${element.name.common}+">
            <div class="flag"><img src="${element.flags.svg}" alt=""></div>
-           <div class="info"><h1 id="nameid">${element.name.common}</h1>
+           <div class="info"><h1 class="nameid">${element.name.common}</h1>
            <h3>Population: ${element.population}</h3>
            <h3>Region: ${element.region}</h3>
            <h3>Capital: ${element.capital}</h3></div>
        </div>`;
-       
+
             })
-            
+            getDetails();
         })
+
 }
 
 function searchCountry(country) {
@@ -56,21 +58,22 @@ function searchCountry(country) {
             containerEl.innerHTML = "";
             console.log(data);
             data.forEach(element => {
-                containerEl.innerHTML += `<div class="card" onclick="getDetails()">
+                containerEl.innerHTML += `<div class="card" data-name=${element.name.common}>
            <div class="flag"><img src="${element.flags.svg}" alt=""></div>
-           <div class="info"><h1 id="nameid">${element.name.common}</h1>
+           <div class="info"><h1 class="nameid">${element.name.common}</h1>
            <h3>Population: ${element.population}</h3>
            <h3>Region: ${element.region}</h3>
            <h3>Capital: ${element.capital}</h3></div>
        </div>`
             })
+            getDetails();
         })
         .catch(err => {
             errorEl.innerHTML = `This country not found`
         })
 }
 
-inputEl.addEventListener("input", function (){
+inputEl.addEventListener("input", function () {
     if (inputEl.value == "") {
         fillBoard()
     } else {
@@ -87,9 +90,17 @@ continentsEl.addEventListener("input", function () {
     }
 })
 
-function getDetails(){
-    let nameidEl=document.querySelector(".nameid");
-    localStorage.setItem("name", nameidEl.innerHTML)
+function getDetails() {
+
+    let carts = document.querySelectorAll(".card");
+    carts.forEach(item=>{
+        item.addEventListener("click",(e)=>{
+            let nameCountry = item.getAttribute('data-name');
+            console.log(nameCountry);
+            localStorage.setItem("name", nameCountry)
+            // window.location="/details.html"
+        })
+    })
 
 };
 
